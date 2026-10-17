@@ -1,0 +1,95 @@
+# Count My Sweat
+
+A personal gym and food tracker for Android, built with Flutter. Local-first, ad-free, no accounts, no backend.
+
+- Log workouts from presets or a free-form **Mix** session, with prefilled weights and a rest timer.
+- Log food via Open Food Facts search, quick add or custom foods, against optional nutrition targets.
+- Analyse training volume and intake, export CSV / PDF, and back up to your own Google Drive (hidden app folder).
+
+Design docs: `design-docs/count-my-sweat-spec.md` (source of truth) and `design-docs/count-my-sweat-screen-guide.pdf`.
+Implementation choices: `NOTES.md`.
+
+## Project layout
+
+```
+lib/
+  core/        constants, theme, units, validation, dates, nutrients, shared UI helpers
+  data/        drift tables + database, repositories, Open Food Facts client, backup codec, providers
+  features/    home, workout, session, exercise, library, food, analyse, profile, export, backup, charts
+tools/prepare_exercises.py   one-off exercise asset builder
+test/          unit + widget tests
+```
+
+## Getting started
+
+```bash
+flutter pub get
+dart run build_runner build
+flutter test
+flutter run
+```
+
+Re-run `dart run build_runner build` after changing drift tables in `lib/data/tables.dart`.
+
+## Exercise assets (one-off)
+
+The exercise library is bundled from [free-exercise-db](https://github.com/yuhonas/free-exercise-db). The asset folders are empty in a fresh checkout; until you build them the app runs with only custom exercises.
+
+```bash
+python -m pip install Pillow
+python tools/prepare_exercises.py
+```
+
+This writes `assets/exercises/exercises.json` and `assets/exercises/img/<id>.webp` (first image, max 400 px wide, WebP quality 60, about 8 MB). Look at a few converted images before committing them. If you already have a local clone of the dataset, pass `--source <path>`. With MSYS2 Python (no pip), install Pillow with `pacman -S mingw-w64-ucrt-x86_64-python-pillow` instead.
+
+## Google Drive backup setup
+
+Drive backup uses `google_sign_in` (7.x) with the `drive.appdata` scope. Every fork needs its own Google Cloud project. **Never commit client secrets.** Android sign-in does not need one.
+
+1. Pick the final Android `applicationId` (currently `com.example.cms` in `android/app/build.gradle.kts`).
+2. In Google Cloud Console: create a project, enable the **Google Drive API**, and configure the OAuth consent screen (add `.../auth/drive.appdata`).
+3. Create an **Android** OAuth client for the package name and the **SHA-1** of each signing key. Register both the debug and the release key:
+   ```bash
+   keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+   ```
+4. Create a **Web application** OAuth client. Its client id is the `serverClientId`.
+5. Pass the web client id at build time:
+   ```bash
+   flutter run --dart-define=GOOGLE_SERVER_CLIENT_ID=1234-abc.apps.googleusercontent.com
+   ```
+   Without it, Profile shows "Drive backup is not set up in this build".
+
+Backups run when the app goes to the background, when you tap **Back up now**, and once a day through [`workmanager`](https://pub.dev/packages/workmanager) (Android only, needs a network connection, registered while Drive is connected). Android needs no extra setup for `workmanager`. If daily backups never happen, the phone's battery optimiser is the usual cause. To check that the task is scheduled:
+
+```bash
+adb shell dumpsys jobscheduler | grep -i cms
+```
+
+## Windows note
+
+If your Flutter SDK path contains a space (for example `C:\Users\First Last\flutter`), `flutter test` / `flutter build` can fail with *"Building native assets … failed"*. Map the SDK to a drive letter for the session and use that instead:
+
+```bash
+subst S: "C:\Users\First Last\flutter"
+```
+
+Two more Windows issues met while building the APK:
+
+- **`Unable to establish loopback connection`** (Gradle, JDK 21+): the JDK creates a Unix-domain socket in `%TEMP%`, which fails when `TEMP` is an 8.3 short path such as `C:\Users\FIRST~1\...`. Point it at a short folder without spaces before building:
+  ```bash
+  set JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=D:\tmp\jdk
+  ```
+- **`Could not close incremental caches`** (Kotlin): happens when the pub cache (`C:`) and the project (`D:`) are on different drives. `android/gradle.properties` sets `kotlin.incremental=false` for this.
+
+## Before a Play Store release
+
+- Choose the `applicationId`, app icon, repository licence and final Mix tagline.
+- Fill in `COFFEE_URL` and `APP_CONTACT` (used in the Open Food Facts User-Agent) in `lib/core/constants.dart`, and check Google Play's current payments policy before keeping the coffee link.
+- Review free-exercise-db's licence and open issues (the image provenance is unverified).
+- Keep the Open Food Facts (ODbL) attribution on the Add food and About screens.
+- Configure release signing in `android/app/build.gradle.kts`.
+
+## Credits
+
+- Food data: [Open Food Facts](https://openfoodfacts.org), ODbL.
+- Exercise data and images: [free-exercise-db](https://github.com/yuhonas/free-exercise-db), Unlicense.

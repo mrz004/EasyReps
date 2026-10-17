@@ -1,0 +1,18 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - lib/**/*.g.dart
+
+linter:
+  rules:
+    # Organisation convention: constants are UPPER_CASE.
+    constant_identifier_names: false
+    prefer_single_quotes: true
+    always_declare_return_types: true
+    avoid_print: true
+    prefer_final_locals: true
