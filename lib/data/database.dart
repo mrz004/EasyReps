@@ -7,7 +7,7 @@ export 'tables.dart';
 
 part 'database.g.dart';
 
-const String DATABASE_NAME = 'count_my_sweat';
+const String DATABASE_NAME = 'easy_reps';
 
 @DriftDatabase(
   tables: [

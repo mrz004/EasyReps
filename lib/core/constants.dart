@@ -1,7 +1,7 @@
 /// App-wide constants. Values marked "placeholder" must be filled in by the owner.
 library;
 
-const String APP_NAME = 'Count My Sweat';
+const String APP_NAME = 'Easy Reps';
 
 /// Keep in sync with `version:` in pubspec.yaml.
 const String APP_VERSION = '0.1.0';
@@ -10,9 +10,9 @@ const String APP_VERSION = '0.1.0';
 const String COFFEE_URL = 'https://www.buymeacoffee.com/';
 
 /// Placeholder: repository URL or contact used in the Open Food Facts User-Agent.
-const String APP_CONTACT = 'https://github.com/count-my-sweat';
+const String APP_CONTACT = 'https://github.com/mrz004';
 
-const String OFF_USER_AGENT = 'CountMySweat/$APP_VERSION ($APP_CONTACT)';
+const String OFF_USER_AGENT = 'EasyReps/$APP_VERSION ($APP_CONTACT)';
 const String OFF_SEARCH_URL = 'https://search.openfoodfacts.org/search';
 
 /// Open Food Facts allows 10 search requests per minute per IP.

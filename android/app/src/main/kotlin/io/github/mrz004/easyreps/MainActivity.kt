@@ -1,4 +1,4 @@
-package com.example.cms
+package io.github.mrz004.easyreps
 
 import io.flutter.embedding.android.FlutterActivity
 

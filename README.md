@@ -1,4 +1,4 @@
-# Count My Sweat
+# Easy Reps
 
 A personal gym and food tracker for Android, built with Flutter. Local-first, ad-free, no accounts, no backend.
 
@@ -6,7 +6,7 @@ A personal gym and food tracker for Android, built with Flutter. Local-first, ad
 - Log food via Open Food Facts search, quick add or custom foods, against optional nutrition targets.
 - Analyse training volume and intake, export CSV / PDF, and back up to your own Google Drive (hidden app folder).
 
-Design docs: `design-docs/count-my-sweat-spec.md` (source of truth) and `design-docs/count-my-sweat-screen-guide.pdf`.
+Design docs: `design-docs/count-my-sweat-spec.md` (source of truth) and `design-docs/count-my-sweat-screen-guide.pdf`. The app was called "Count My Sweat" when they were written; it is now **Easy Reps**.
 Implementation choices: `NOTES.md`.
 
 ## Project layout
@@ -46,7 +46,7 @@ This writes `assets/exercises/exercises.json` and `assets/exercises/img/<id>.web
 
 Drive backup uses `google_sign_in` (7.x) with the `drive.appdata` scope. Every fork needs its own Google Cloud project. **Never commit client secrets.** Android sign-in does not need one.
 
-1. Pick the final Android `applicationId` (currently `com.example.cms` in `android/app/build.gradle.kts`).
+1. Use the Android `applicationId` from `android/app/build.gradle.kts` (`io.github.mrz004.easyreps`; forks should use their own).
 2. In Google Cloud Console: create a project, enable the **Google Drive API**, and configure the OAuth consent screen (add `.../auth/drive.appdata`).
 3. Create an **Android** OAuth client for the package name and the **SHA-1** of each signing key. Register both the debug and the release key:
    ```bash
@@ -62,7 +62,7 @@ Drive backup uses `google_sign_in` (7.x) with the `drive.appdata` scope. Every f
 Backups run when the app goes to the background, when you tap **Back up now**, and once a day through [`workmanager`](https://pub.dev/packages/workmanager) (Android only, needs a network connection, registered while Drive is connected). Android needs no extra setup for `workmanager`. If daily backups never happen, the phone's battery optimiser is the usual cause. To check that the task is scheduled:
 
 ```bash
-adb shell dumpsys jobscheduler | grep -i cms
+adb shell dumpsys jobscheduler | grep -i easyreps
 ```
 
 ## Windows note

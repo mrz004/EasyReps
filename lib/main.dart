@@ -11,7 +11,7 @@ void main() {
   runApp(
     ProviderScope(
       overrides: [databaseProvider.overrideWithValue(db)],
-      child: const CountMySweatApp(),
+      child: const EasyRepsApp(),
     ),
   );
 }

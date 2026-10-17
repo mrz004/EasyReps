@@ -108,7 +108,7 @@ class ExportService {
           : null,
     );
     final dir = await _exportDir();
-    final file = File('${dir.path}/count-my-sweat-summary-${dayKey(range.last)}.pdf');
+    final file = File('${dir.path}/easy-reps-summary-${dayKey(range.last)}.pdf');
     await file.writeAsBytes(bytes, flush: true);
     return XFile(file.path, mimeType: 'application/pdf');
   }

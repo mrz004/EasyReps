@@ -2,7 +2,7 @@
     <!-- The only permission: Open Food Facts search and Google Drive backup. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="Count My Sweat"
+        android:label="Easy Reps"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

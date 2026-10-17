@@ -29,7 +29,7 @@ RAW_BASE = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main"
 MAX_WIDTH = 400
 WEBP_QUALITY = 60
 BUDGET_BYTES = 10 * 1000 * 1000
-USER_AGENT = "CountMySweat-asset-prep/0.1"
+USER_AGENT = "EasyReps-asset-prep/0.1"
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "assets" / "exercises"

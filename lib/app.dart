@@ -22,8 +22,8 @@ final startupProvider = FutureProvider<void>((ref) async {
   await ref.read(backupServiceProvider).start();
 });
 
-class CountMySweatApp extends StatelessWidget {
-  const CountMySweatApp({super.key});
+class EasyRepsApp extends StatelessWidget {
+  const EasyRepsApp({super.key});
 
   @override
   Widget build(BuildContext context) {

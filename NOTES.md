@@ -2,6 +2,8 @@
 
 Choices made where `design-docs/count-my-sweat-spec.md` is silent (spec section 0 asks for them to be recorded here).
 
+The app was renamed from "Count My Sweat" (the name in the design docs) to **Easy Reps** on 2026-10-18, after v0.1.0 and before the Google Cloud setup. The internal Dart package name stays `cms`.
+
 ## Data and rules
 - **Mix detection.** A session is Mix when `preset_id IS NULL` *and* `preset_name = 'Mix'`. A preset session whose preset was deleted also gets `preset_id = NULL`; the name check keeps it from turning into a Mix (no "+ Add exercise", no "Save as preset").
 - **One active session** is enforced twice: in `SessionRepository.start()` and by a partial unique index `sessions_one_active` created in the migration.
@@ -47,6 +49,6 @@ Choices made where `design-docs/count-my-sweat-spec.md` is silent (spec section 
 - Organisation convention: constants are `UPPER_CASE` (lint `constant_identifier_names` is disabled for this).
 
 ## Open items (owner)
-- `applicationId` / namespace is still `com.example.cms`. Pick the final id **before** registering the OAuth client.
+- `applicationId` / namespace is `io.github.mrz004.easyreps` (chosen 2026-10-18 from the owner's GitHub user). It is bound to the OAuth client: don't change it.
 - `COFFEE_URL` and `APP_CONTACT` in `lib/core/constants.dart` are placeholders.
 - Repository licence, final Mix tagline, app icon.

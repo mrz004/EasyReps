@@ -17,7 +17,7 @@ void main() {
           // The real dataset import is covered by seed_import_test.dart.
           exerciseDatasetProvider.overrideWithValue(() async => '[]'),
         ],
-        child: const CountMySweatApp(),
+        child: const EasyRepsApp(),
       ),
     );
     await tester.pumpAndSettle();

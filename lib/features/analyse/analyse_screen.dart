@@ -64,7 +64,7 @@ class _AnalyseScreenState extends ConsumerState<AnalyseScreen> {
       final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
       final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/count-my-sweat-${_range.label}-${dayKey(DateTime.now())}.png');
+      final file = File('${dir.path}/easy-reps-${_range.label}-${dayKey(DateTime.now())}.png');
       await file.writeAsBytes(bytes!.buffer.asUint8List(), flush: true);
       await SharePlus.instance.share(
         ShareParams(files: [XFile(file.path, mimeType: 'image/png')]),
