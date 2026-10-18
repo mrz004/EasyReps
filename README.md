@@ -53,11 +53,11 @@ Drive backup uses `google_sign_in` (7.x) with the `drive.appdata` scope. Every f
    keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
    ```
 4. Create a **Web application** OAuth client. Its client id is the `serverClientId`.
-5. Pass the web client id at build time:
+5. Copy `dart_defines.example.json` to `dart_defines.json` (git-ignored) and paste the **Web** client id into it. Then build or run with:
    ```bash
-   flutter run --dart-define=GOOGLE_SERVER_CLIENT_ID=1234-abc.apps.googleusercontent.com
+   flutter run --dart-define-from-file=dart_defines.json
    ```
-   Without it, Profile shows "Drive backup is not set up in this build".
+   (`flutter build apk --release --dart-define-from-file=dart_defines.json` for an APK.) Without it, Profile shows "Drive backup is not set up in this build".
 
 Backups run when the app goes to the background, when you tap **Back up now**, and once a day through [`workmanager`](https://pub.dev/packages/workmanager) (Android only, needs a network connection, registered while Drive is connected). Android needs no extra setup for `workmanager`. If daily backups never happen, the phone's battery optimiser is the usual cause. To check that the task is scheduled:
 

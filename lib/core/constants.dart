@@ -4,7 +4,7 @@ library;
 const String APP_NAME = 'Easy Reps';
 
 /// Keep in sync with `version:` in pubspec.yaml.
-const String APP_VERSION = '0.1.0';
+const String APP_VERSION = '0.2.0';
 
 /// Placeholder: the owner's "Buy me a coffee" page.
 const String COFFEE_URL = 'https://www.buymeacoffee.com/';
