@@ -6,3 +6,7 @@
 *.jar  binary
 *.otf  binary
 *.ttf  binary
+
+# Windows scripts must keep CRLF line endings.
+*.bat text eol=crlf
+*.cmd text eol=crlf

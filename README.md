@@ -31,6 +31,19 @@ flutter run
 
 Re-run `dart run build_runner build` after changing drift tables in `lib/data/tables.dart`.
 
+## Building an APK (Windows)
+
+`tools\build_apk.bat` builds with your `dart_defines.json` and handles the Windows workarounds below automatically:
+
+```bash
+tools\build_apk.bat release
+```
+
+- `debug` or `release` is required; any further arguments go to `flutter build apk`. For example, `tools\build_apk.bat release --split-per-abi` builds one smaller APK per CPU type (most phones use `app-arm64-v8a-release.apk`).
+- The APKs land in `build\app\outputs\flutter-apk\`, and the script prints their paths.
+- It finds Flutter on `PATH` (or `FLUTTER_ROOT`). If that path has spaces, it maps it to `S:` for the build, then restores `android\local.properties` and removes the mapping.
+- "The network path was not found." lines during the build are harmless (Flutter probing the mapped drive).
+
 ## Exercise assets (one-off)
 
 The exercise library is bundled from [free-exercise-db](https://github.com/yuhonas/free-exercise-db). The asset folders are empty in a fresh checkout; until you build them the app runs with only custom exercises.
@@ -75,7 +88,9 @@ adb shell dumpsys jobscheduler | grep -i easyreps
 
 ## Windows note
 
-If your Flutter SDK path contains a space (for example `C:\Users\First Last\flutter`), `flutter test` / `flutter build` can fail with *"Building native assets … failed"*. Map the SDK to a drive letter for the session and use that instead:
+`tools\build_apk.bat` (see "Building an APK") applies the first two workarounds for you; these notes explain them and cover running other commands by hand.
+
+If your Flutter SDK path contains a space (for example `C:\Users\First Last\flutter`), `flutter test` / `flutter build` can fail with *"Building native assets … failed"*. Map the SDK to a drive letter for the session and use that instead (for example `S:\bin\flutter test`):
 
 ```bash
 subst S: "C:\Users\First Last\flutter"
