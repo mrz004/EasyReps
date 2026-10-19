@@ -151,18 +151,20 @@ class _PresetEditorScreenState extends ConsumerState<PresetEditorScreen> {
             onChanged: (_) => _dirty = true,
           ),
           const SectionHeader('Preferred days (optional)'),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
+          // One row of seven equal toggles, so the week never wraps.
+          Row(
             children: [
-              for (var wd = 1; wd <= 7; wd++)
-                FilterChip(
-                  label: Text(WEEKDAY_SHORT[wd - 1]),
-                  tooltip: WEEKDAY_NAMES[wd - 1],
-                  showCheckmark: false,
-                  selected: maskHasWeekday(_days, wd),
-                  onSelected: (_) => _changed(() => _days ^= weekdayBit(wd)),
+              for (var wd = 1; wd <= 7; wd++) ...[
+                if (wd > 1) const SizedBox(width: 6),
+                Expanded(
+                  child: _DayToggle(
+                    label: WEEKDAY_SHORT[wd - 1],
+                    fullName: WEEKDAY_NAMES[wd - 1],
+                    selected: maskHasWeekday(_days, wd),
+                    onTap: () => _changed(() => _days ^= weekdayBit(wd)),
+                  ),
                 ),
+              ],
             ],
           ),
           const SectionHeader('Exercises'),
@@ -261,6 +263,55 @@ class _PresetEditorScreenState extends ConsumerState<PresetEditorScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One weekday toggle in the preferred-days row.
+class _DayToggle extends StatelessWidget {
+  const _DayToggle({
+    required this.label,
+    required this.fullName,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final String fullName;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: fullName,
+      excludeSemantics: true,
+      child: Material(
+        color: selected ? scheme.primary : theme.cardTheme.color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: selected ? scheme.primary : scheme.outlineVariant),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: SizedBox(
+            height: 48,
+            child: Center(
+              child: Text(
+                label,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: selected ? scheme.onPrimary : scheme.onSurface,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

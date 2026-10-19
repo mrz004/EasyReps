@@ -124,7 +124,7 @@ class _AnalyseScreenState extends ConsumerState<AnalyseScreen> {
                     intake == null
                         ? const SizedBox.shrink()
                         : intake.every((d) => d.value == 0)
-                        ? const EmptyChart('No food logged in this range')
+                        ? const EmptyChart('No food logged in this range', icon: Icons.bar_chart)
                         : DailyBarChart(
                             values: intake,
                             target: target?.value,

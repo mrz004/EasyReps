@@ -27,7 +27,7 @@ void main() {
 
     await tester.tap(find.text('Workout'));
     await tester.pumpAndSettle();
-    expect(find.text('Tap + to create your first preset'), findsOneWidget);
+    expect(find.text('No presets yet'), findsOneWidget);
     await tester.pageBack();
     await tester.pumpAndSettle();
 

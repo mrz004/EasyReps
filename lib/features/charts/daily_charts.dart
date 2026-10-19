@@ -213,15 +213,22 @@ class DailyLineChart extends StatelessWidget {
 
 /// Placeholder shown inside a chart box when there is nothing to plot.
 class EmptyChart extends StatelessWidget {
-  const EmptyChart(this.message, {super.key});
+  const EmptyChart(this.message, {super.key, this.icon = Icons.show_chart});
   final String message;
+  final IconData icon;
 
   @override
-  Widget build(BuildContext context) => Center(
-    child: Text(
-      message,
-      textAlign: TextAlign.center,
-      style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
-    ),
-  );
+  Widget build(BuildContext context) {
+    final muted = Theme.of(context).colorScheme.onSurfaceVariant;
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 40, color: muted.withValues(alpha: 0.5)),
+          const SizedBox(height: 8),
+          Text(message, textAlign: TextAlign.center, style: TextStyle(color: muted)),
+        ],
+      ),
+    );
+  }
 }

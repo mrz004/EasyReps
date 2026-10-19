@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/constants.dart';
 import 'core/theme.dart';
+import 'core/ui.dart';
 import 'data/exercise_repository.dart';
 import 'data/providers.dart';
 import 'features/backup/backup_service.dart';
@@ -82,6 +83,8 @@ class _StartupGateState extends ConsumerState<_StartupGate>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              AppLogo(size: 96, semanticLabel: '$APP_NAME logo'),
+              SizedBox(height: 24),
               CircularProgressIndicator(),
               SizedBox(height: 16),
               Text('Getting things ready...'),

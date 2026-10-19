@@ -14,9 +14,11 @@ class AboutScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text(APP_NAME, style: text.headlineSmall),
-          Text('Version $APP_VERSION'),
-          const SizedBox(height: 8),
+          const Center(child: AppLogo(size: 88)),
+          const SizedBox(height: 12),
+          Center(child: Text(APP_NAME, style: text.headlineSmall)),
+          const Center(child: Text('Version $APP_VERSION')),
+          const SizedBox(height: 16),
           const Text(
             'A personal gym and food tracker. Your data stays on this phone, '
             'and optionally in your own Google Drive. No ads, no accounts, no analytics.',

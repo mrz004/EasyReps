@@ -79,7 +79,7 @@ class _NutritionCardState extends State<NutritionCard> {
     final progress = target.value <= 0 ? 1.0 : (total / target.value).clamp(0.0, 1.0);
     final color = switch (status) {
       TargetStatus.exceeded => scheme.error,
-      TargetStatus.met => Colors.green.shade600,
+      TargetStatus.met => scheme.secondary,
       _ => scheme.primary,
     };
     final suffix = switch (status) {

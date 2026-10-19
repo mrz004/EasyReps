@@ -11,6 +11,7 @@ class PresetSummary {
     required this.exerciseCount,
     required this.recentFinishedCount,
     this.lastStartedAt,
+    this.exerciseNames = const [],
   });
 
   final Preset preset;
@@ -19,7 +20,13 @@ class PresetSummary {
   /// Finished sessions in the last [RANKING_WINDOW_DAYS] days.
   final int recentFinishedCount;
   final int? lastStartedAt;
+
+  /// Exercise names in preset order (for the card preview).
+  final List<String> exerciseNames;
 }
+
+/// Separates names in the SQL group_concat (ASCII unit separator).
+const String _NAME_SEPARATOR = '\u001f';
 
 /// Ranks presets for the Workout screen (spec section 4).
 /// Group A (preferred today) before group B; each by recent use, then most
@@ -38,14 +45,16 @@ List<PresetSummary> rankPresets(List<PresetSummary> presets, DateTime now) {
     return a.preset.name.toLowerCase().compareTo(b.preset.name.toLowerCase());
   }
 
-  final groupA = presets
-      .where((p) => maskHasWeekday(p.preset.preferredDays, weekday))
-      .toList()
-    ..sort(compare);
-  final groupB = presets
-      .where((p) => !maskHasWeekday(p.preset.preferredDays, weekday))
-      .toList()
-    ..sort(compare);
+  final groupA =
+      presets
+          .where((p) => maskHasWeekday(p.preset.preferredDays, weekday))
+          .toList()
+        ..sort(compare);
+  final groupB =
+      presets
+          .where((p) => !maskHasWeekday(p.preset.preferredDays, weekday))
+          .toList()
+        ..sort(compare);
   return [...groupA, ...groupB];
 }
 
@@ -63,10 +72,18 @@ class PresetRepository {
           '(SELECT COUNT(*) FROM preset_exercises pe WHERE pe.preset_id = p.id) AS exercise_count, '
           '(SELECT COUNT(*) FROM sessions s WHERE s.preset_id = p.id '
           '  AND s.ended_at IS NOT NULL AND s.started_at >= ?) AS recent_count, '
-          '(SELECT MAX(s.started_at) FROM sessions s WHERE s.preset_id = p.id) AS last_started_at '
+          '(SELECT MAX(s.started_at) FROM sessions s WHERE s.preset_id = p.id) AS last_started_at, '
+          '(SELECT group_concat(name, char(31)) FROM (SELECT e.name AS name FROM preset_exercises pe '
+          '  JOIN exercises e ON e.id = pe.exercise_id WHERE pe.preset_id = p.id ORDER BY pe.position)) '
+          '  AS exercise_names '
           'FROM presets p',
           variables: [Variable.withInt(cutoff)],
-          readsFrom: {db.presets, db.presetExercises, db.sessions},
+          readsFrom: {
+            db.presets,
+            db.presetExercises,
+            db.sessions,
+            db.exercises,
+          },
         )
         .watch()
         .map(
@@ -77,6 +94,11 @@ class PresetRepository {
                 exerciseCount: row.read<int>('exercise_count'),
                 recentFinishedCount: row.read<int>('recent_count'),
                 lastStartedAt: row.readNullable<int>('last_started_at'),
+                exerciseNames:
+                    row
+                        .readNullable<String>('exercise_names')
+                        ?.split(_NAME_SEPARATOR) ??
+                    const [],
               ),
           ],
         );
@@ -86,14 +108,15 @@ class PresetRepository {
       (db.select(db.presets)..where((p) => p.id.equals(id))).getSingleOrNull();
 
   Future<List<Exercise>> exercisesOf(int presetId) {
-    final query = db.select(db.presetExercises).join([
-      innerJoin(
-        db.exercises,
-        db.exercises.id.equalsExp(db.presetExercises.exerciseId),
-      ),
-    ])
-      ..where(db.presetExercises.presetId.equals(presetId))
-      ..orderBy([OrderingTerm.asc(db.presetExercises.position)]);
+    final query =
+        db.select(db.presetExercises).join([
+            innerJoin(
+              db.exercises,
+              db.exercises.id.equalsExp(db.presetExercises.exerciseId),
+            ),
+          ])
+          ..where(db.presetExercises.presetId.equals(presetId))
+          ..orderBy([OrderingTerm.asc(db.presetExercises.position)]);
     return query.map((r) => r.readTable(db.exercises)).get();
   }
 
@@ -106,14 +129,17 @@ class PresetRepository {
     DateTime? now,
   }) {
     return db.transaction(() async {
-      final presetId = id ??
-          await db.into(db.presets).insert(
-            PresetsCompanion.insert(
-              name: name.trim(),
-              preferredDays: Value(preferredDays),
-              createdAt: (now ?? DateTime.now()).millisecondsSinceEpoch,
-            ),
-          );
+      final presetId =
+          id ??
+          await db
+              .into(db.presets)
+              .insert(
+                PresetsCompanion.insert(
+                  name: name.trim(),
+                  preferredDays: Value(preferredDays),
+                  createdAt: (now ?? DateTime.now()).millisecondsSinceEpoch,
+                ),
+              );
       if (id != null) {
         await (db.update(db.presets)..where((p) => p.id.equals(id))).write(
           PresetsCompanion(

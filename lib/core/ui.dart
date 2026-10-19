@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'constants.dart';
+
 /// Asks a yes/no question. Returns true only when confirmed.
 Future<bool> confirm(
   BuildContext context, {
@@ -59,7 +61,13 @@ class SectionHeader extends StatelessWidget {
           Expanded(
             child: Semantics(
               header: true,
-              child: Text(text, style: Theme.of(context).textTheme.titleSmall),
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
           ?trailing,
@@ -80,9 +88,8 @@ class HintText extends StatelessWidget {
     return Text(
       text,
       textAlign: textAlign,
-      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
-      ),
+      style: Theme.of(context).textTheme.bodyMedium
+          ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
     );
   }
 }
@@ -129,6 +136,83 @@ class ExerciseImage extends StatelessWidget {
   }
 }
 
+/// A friendly empty state: icon in a tinted circle, title, message and an
+/// optional action. Fills space that would otherwise look unfinished.
+class EmptyState extends StatelessWidget {
+  const EmptyState({
+    super.key,
+    required this.icon,
+    required this.title,
+    this.message,
+    this.action,
+  });
+
+  final IconData icon;
+  final String title;
+  final String? message;
+  final Widget? action;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: scheme.secondaryContainer,
+              shape: BoxShape.circle,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Icon(icon, size: 32, color: scheme.onSecondaryContainer),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleMedium,
+          ),
+          if (message != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              message!,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+          if (action != null) ...[const SizedBox(height: 16), action!],
+        ],
+      ),
+    );
+  }
+}
+
+/// The Easy Reps logo tile. Decorative by default (pair it with the app name).
+class AppLogo extends StatelessWidget {
+  const AppLogo({super.key, this.size = 32, this.semanticLabel});
+  final double size;
+
+  /// Set when the logo stands alone, e.g. 'Easy Reps logo'.
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) => Image.asset(
+    LOGO_ASSET,
+    width: size,
+    height: size,
+    filterQuality: FilterQuality.medium,
+    semanticLabel: semanticLabel,
+    excludeFromSemantics: semanticLabel == null,
+  );
+}
+
 /// Input formatters for numeric fields.
 List<TextInputFormatter> get decimalInputFormatters => [
   FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
@@ -136,4 +220,6 @@ List<TextInputFormatter> get decimalInputFormatters => [
 List<TextInputFormatter> get integerInputFormatters => [
   FilteringTextInputFormatter.digitsOnly,
 ];
-const TextInputType DECIMAL_KEYBOARD = TextInputType.numberWithOptions(decimal: true);
+const TextInputType DECIMAL_KEYBOARD = TextInputType.numberWithOptions(
+  decimal: true,
+);

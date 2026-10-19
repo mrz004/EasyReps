@@ -62,6 +62,7 @@ void main() {
 
     final result = (await repo.watchSummaries(clock: () => now).first).single;
     expect(result.exerciseCount, 1);
+    expect(result.exerciseNames, ['Squat']);
     expect(result.recentFinishedCount, 1);
     expect(result.lastStartedAt, now.subtract(const Duration(days: 1)).millisecondsSinceEpoch);
   });

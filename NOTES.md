@@ -30,6 +30,13 @@ The app was renamed from "Count My Sweat" (the name in the design docs) to **Eas
 - **Preset editor**: leaving with unsaved changes asks for confirmation. Saving needs at least one exercise.
 - **Library**: items already in the list are shown as "Added" and can't be picked again.
 
+## Visual style (owner request, 2026-10-19)
+- iOS-like **glass** look (`lib/core/glass.dart`): every page gets a gradient backdrop with soft colour glows, added once by `GlassPageTransitionsBuilder` (scaffolds are transparent). Home's chart card and tiles are real frosted panels (`GlassCard` with `BackdropFilter`). All other cards are translucent via the theme, **without** blur: blur is costly on Android, so it stays off long lists.
+- **Palette** (owner choice, 2026-10-19): Slate Blue `#3D4F5A` (primary), Fog `#E2DECE` (light background), Aloe `#73795D` (secondary: target met, tile badges, target lines) and Charcoal `#2E2C26` (text; dark background). A muted terracotta `#A4483A` is added for errors and exceeded limits. Both colour schemes are set explicitly in `lib/core/theme.dart`. Aloe is not used behind body text because white text on it is only about 4.5:1.
+- **Layout**: Home fills one screen (chart and tiles share spare height 5:4; it scrolls with large text). Preset cards preview up to 4 exercise names (beyond the spec, which lists name, days and count) to fill their 3:2 shape. Empty lists use `EmptyState` (icon, title, message, optional action).
+- The "Buy me a coffee" link is commented out in `home_screen.dart` until `COFFEE_URL` is set up.
+- **Logo**: a Fog dumbbell inside a light-Aloe circular repeat arrow ("reps") on a Slate Blue tile. It is drawn in code by `tools/make_icons.py` (Pillow), which writes `assets/branding/logo.png`, `assets/branding/play_store_512.png`, the Android launcher icons (legacy, adaptive and the Android 13 monochrome layer) and `splash_logo.png`. Edit the script and re-run it to change the logo. In the app, the logo appears in the Home title bar, the startup screen and About. The launch splash uses the background colours `#F6F3EA` (light) and `#23211C` (dark).
+
 ## Exports
 - CSV uses RFC 4180 line endings (`\r\n`). Weights have up to 3 decimals and nutrients up to 2, with trailing zeros trimmed.
 - PDF: averages are per **logged** day (days with at least one entry), and target results count logged days. A **personal record** needs earlier history to beat; an exercise's first-ever period is not a PR, so the "All" range never shows PRs.

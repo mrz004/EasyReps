@@ -87,7 +87,12 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
         children: [
           NutritionCard(totals: totals, targets: targets),
           const SectionHeader('Entries'),
-          if (entries.isEmpty) const HintText('Nothing logged on this day', textAlign: TextAlign.start),
+          if (entries.isEmpty)
+            EmptyState(
+              icon: Icons.restaurant_outlined,
+              title: _isToday ? 'Nothing logged yet today' : 'Nothing logged on this day',
+              message: 'Tap Add food to log a meal, a snack or a quick calorie count.',
+            ),
           for (final e in entries)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),

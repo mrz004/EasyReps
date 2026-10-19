@@ -149,12 +149,13 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
             child: exercisesAsync.isLoading && all.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : filtered.isEmpty
-                ? Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: HintText(
-                      all.isEmpty
-                          ? 'No exercises yet. Create a custom one below.'
-                          : 'No exercises match.',
+                ? SingleChildScrollView(
+                    child: EmptyState(
+                      icon: Icons.search_off,
+                      title: all.isEmpty ? 'No exercises yet' : 'No exercises match',
+                      message: all.isEmpty
+                          ? 'Create a custom exercise below.'
+                          : 'Try another name or clear the muscle filter.',
                     ),
                   )
                 : ListView.builder(

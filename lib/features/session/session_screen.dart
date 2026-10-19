@@ -128,7 +128,18 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
                 ),
               ),
             ),
-          if (isMix && active) ...[
+          if (isMix && active && items.isEmpty && !itemsAsync.isLoading)
+            EmptyState(
+              icon: Icons.bolt,
+              title: 'Pick your first exercise',
+              message: 'Exercises picked here join this session only.',
+              action: FilledButton.icon(
+                onPressed: () => _addExercise(items),
+                icon: const Icon(Icons.add),
+                label: const Text('Add exercise'),
+              ),
+            )
+          else if (isMix && active) ...[
             const SizedBox(height: 8),
             OutlinedButton.icon(
               onPressed: () => _addExercise(items),
@@ -139,7 +150,11 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
             const HintText('Exercises picked here join this session only'),
           ],
           if (!isMix && items.isEmpty && !itemsAsync.isLoading)
-            const HintText('This preset has no exercises.'),
+            const EmptyState(
+              icon: Icons.list_alt,
+              title: 'This preset has no exercises',
+              message: 'Edit the preset from the Workout screen to add some.',
+            ),
         ],
       ),
       bottomNavigationBar: active
