@@ -1,4 +1,4 @@
-# Count My Sweat - Build Spec (for GitHub Copilot)
+# Easy Reps - Build Spec (for GitHub Copilot)
 
 A personal gym + food tracker for Android. Local-first, ad-free, no accounts, no backend.
 
@@ -224,7 +224,7 @@ Navigation: Home -> Food / Workout / Analyse / Profile. Workout -> Session -> Ex
 
 ## 6. Food data (Open Food Facts)
 
-- Free, no API key. Terms: attribution, share-alike (ODbL), a custom `User-Agent` such as `CountMySweat/<version> (<repo URL or contact>)`, and enforced rate limits (search is limited more strictly than product reads).
+- Free, no API key. Terms: attribution, share-alike (ODbL), a custom `User-Agent` such as `EasyReps/<version> (<repo URL or contact>)`, and enforced rate limits (search is limited more strictly than product reads).
 - Find the current search endpoint and field names in the official docs (https://openfoodfacts.github.io/openfoodfacts-server/api/) before coding; do not rely on memory.
 - Per-100 g nutriment keys expected (verify): `energy-kcal_100g`, `proteins_100g`, `carbohydrates_100g`, `sugars_100g`, `fiber_100g`, `fat_100g`, `saturated-fat_100g`, `sodium_100g` (grams; convert to mg). If kcal is missing, fall back to `energy_100g` (kJ) / 4.184.
 - Search only after at least 3 characters and a 500 ms pause. Cache every result you show into `foods`. Handle offline and errors without blocking quick add or custom foods.

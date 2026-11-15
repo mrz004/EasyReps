@@ -6,7 +6,7 @@ A personal gym and food tracker for Android, built with Flutter. Local-first, ad
 - Log food via Open Food Facts search, quick add or custom foods, against optional nutrition targets.
 - Analyse training volume and intake, export CSV / PDF, and back up to your own Google Drive (hidden app folder).
 
-Design docs: `design-docs/count-my-sweat-spec.md` (source of truth) and `design-docs/count-my-sweat-screen-guide.pdf`. The app was called "Count My Sweat" when they were written; it is now **Easy Reps**.
+Design docs: `design-docs/easy-reps-spec.md` (source of truth) and `design-docs/easy-reps-screen-guide.pdf`.
 Implementation choices: `NOTES.md`.
 
 ## Project layout

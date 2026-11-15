@@ -1,8 +1,8 @@
 # Implementation notes
 
-Choices made where `design-docs/count-my-sweat-spec.md` is silent (spec section 0 asks for them to be recorded here).
+Choices made where `design-docs/easy-reps-spec.md` is silent (spec section 0 asks for them to be recorded here).
 
-The app was renamed from "Count My Sweat" (the name in the design docs) to **Easy Reps** on 2026-10-18, after v0.1.0 and before the Google Cloud setup. The internal Dart package name stays `cms`.
+The internal Dart package name is `cms`; it is never shown to users.
 
 ## Data and rules
 - **Mix detection.** A session is Mix when `preset_id IS NULL` *and* `preset_name = 'Mix'`. A preset session whose preset was deleted also gets `preset_id = NULL`; the name check keeps it from turning into a Mix (no "+ Add exercise", no "Save as preset").
